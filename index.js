@@ -17,7 +17,28 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
+    try {
+        // service collection
+        const serviceCollections = client.db("consultio").collection("services");
 
+        // service api 
+        app.get("/services", async (req, res) => {
+            const query = {}
+            const cursor = serviceCollections.find(query);
+            const services = await cursor.toArray();
+            res.send(services);
+        })
+        // home page limit service api 
+        app.get("/services/limited", async (req, res) => {
+            const query = {}
+            const cursor = serviceCollections.find(query);
+            const services = await cursor.limit(3).toArray();
+            res.send(services);
+        })
+    }
+    finally {
+
+    }
 }
 
 run().catch(error => console.log(error));
