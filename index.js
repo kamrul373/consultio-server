@@ -44,8 +44,15 @@ async function run() {
             res.send(singleServiceDetails);
         });
 
-        // Get Reviews
+        // Get Reviews for single service
+        app.get("/reviews/:serviceId", async (req, res) => {
+            const serviceId = req.params.serviceId;
+            const query = { serviceId: serviceId };
+            const cursor = customerReviewCollection.find(query).sort({ date: -1 });
+            const result = await cursor.toArray();
 
+            res.send(result)
+        })
         // Post Reviews
         app.post("/reviewpost", async (req, res) => {
             const query = req.body;
