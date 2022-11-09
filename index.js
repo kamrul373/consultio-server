@@ -20,7 +20,8 @@ async function run() {
     try {
         // service collection
         const serviceCollections = client.db("consultio").collection("services");
-
+        // reviews collection
+        const customerReviewCollection = client.db("consultio").collection("customerReviews");
         // service api 
         app.get("/services", async (req, res) => {
             const query = {}
@@ -41,7 +42,17 @@ async function run() {
             const query = { _id: ObjectId(service_id) };
             const singleServiceDetails = await serviceCollections.findOne(query);
             res.send(singleServiceDetails);
+        });
+
+        // Get Reviews
+
+        // Post Reviews
+        app.post("/reviewpost", async (req, res) => {
+            const query = req.body;
+            const result = await customerReviewCollection.insertOne(query);
+            res.send(result);
         })
+
     }
     finally {
 
