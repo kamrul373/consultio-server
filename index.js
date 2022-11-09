@@ -50,7 +50,6 @@ async function run() {
             const query = { serviceId: serviceId };
             const cursor = customerReviewCollection.find(query).sort({ date: -1 });
             const result = await cursor.toArray();
-
             res.send(result)
         })
         // Post Reviews
@@ -58,7 +57,53 @@ async function run() {
             const query = req.body;
             const result = await customerReviewCollection.insertOne(query);
             res.send(result);
+        });
+
+        // get all reviews of an user 
+        app.get("/userreviews", async (req, res) => {
+            let query = {};
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            } else {
+                query = {
+                    uid: req.query.uid
+                }
+            }
+            const cursor = customerReviewCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
         })
+        // get a single review 
+
+        // delete a review 
+        app.delete("/delete/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await customerReviewCollection.deleteOne(query);
+
+            res.send(result);
+        })
+
+        // get review rating based on service id
+
+        // app.patch("/updaterating/:id", async (req, res) => {
+        //     const service_id = req.params.id;
+        //     const rating = req.body;
+
+        //     const query = { _id: ObjectId(service_id) };
+
+        //     const updateDoc = {
+        //         $set: {
+        //             ratting: rating
+        //         }
+        //     };
+        //     const result = await serviceCollections.updateOne(query, updateDoc)
+        //     console.log(service_id)
+        //     console.log(rating);
+        //     res.send({ rating, service_id });
+        // });
 
     }
     finally {
