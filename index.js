@@ -29,6 +29,12 @@ async function run() {
             const services = await cursor.toArray();
             res.send(services);
         })
+        // add service 
+        app.post("/addservice", async (req, res) => {
+            const query = req.body;
+            const result = serviceCollections.insertOne(query);
+            res.send(result)
+        })
         // home page limit service api 
         app.get("/services/limited", async (req, res) => {
             const query = {}
