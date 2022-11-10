@@ -38,7 +38,7 @@ async function run() {
         // home page limit service api 
         app.get("/services/limited", async (req, res) => {
             const query = {}
-            const cursor = serviceCollections.find(query);
+            const cursor = serviceCollections.find(query).sort({ _id: -1 });
             const services = await cursor.limit(3).toArray();
             res.send(services);
         });
