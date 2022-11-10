@@ -1,5 +1,6 @@
 // express
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const app = express();
 const port = process.env.PORT || 5000;
 //Mongodb
@@ -18,6 +19,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
+        // jwt token generation
+        app.post("/jwt", (req, res) => {
+            const user = req.body;
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "1h" });
+
+            res.send({ token });
+        })
+
         // service collection
         const serviceCollections = client.db("consultio").collection("services");
         // reviews collection
