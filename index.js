@@ -16,7 +16,22 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.lbqhd62.mongodb.net/?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-
+// jwt verfication 
+function verifyJWT(req, res, next) {
+    const authHeaders = req.headers.authorization;
+    if (!authHeaders) {
+        res.status(401).send("Unauthorized Request")
+    }
+    // verifying token
+    const token = authHeaders.split(" ")[1];
+    jwt.verify(token, process.env.ACCESS_TOKEN, function (error, decoded) {
+        if (error) {
+            res.status(403).send("Unauthorized Access")
+        }
+        req.decoded = decoded;
+        next();
+    })
+}
 async function run() {
     try {
         // jwt token generation
@@ -75,7 +90,7 @@ async function run() {
         });
 
         // get all reviews of an user 
-        app.get("/userreviews", async (req, res) => {
+        app.get("/userreviews", verifyJWT, async (req, res) => {
             let query = {};
             if (req.query.email) {
                 query = {
