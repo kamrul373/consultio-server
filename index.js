@@ -138,26 +138,6 @@ async function run() {
 
             res.send(result);
         })
-
-        // get review rating based on service id
-
-        // app.patch("/updaterating/:id", async (req, res) => {
-        //     const service_id = req.params.id;
-        //     const rating = req.body;
-
-        //     const query = { _id: ObjectId(service_id) };
-
-        //     const updateDoc = {
-        //         $set: {
-        //             ratting: rating
-        //         }
-        //     };
-        //     const result = await serviceCollections.updateOne(query, updateDoc)
-        //     console.log(service_id)
-        //     console.log(rating);
-        //     res.send({ rating, service_id });
-        // });
-
     }
     finally {
 
